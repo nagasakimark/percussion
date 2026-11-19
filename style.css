@@ -308,3 +308,5 @@ header {
 @keyframes glow { 50% { box-shadow: 0 4px 0 var(--red-d), 0 0 0 6px rgba(232, 80, 79, .25); } }
 @keyframes wobble { 25% { transform: rotate(-3deg); } 75% { transform: rotate(3deg); } }
 @keyframes poof { to { transform: translate(-50%, -90%) scale(1.6); opacity: 0; } }
+
+img.icon { display: block; pointer-events: none; -webkit-user-drag: none; }

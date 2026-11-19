@@ -14,23 +14,26 @@ const GROUPS = {
 // rms: measured loudness of each sample (dB) → used to balance levels.
 // roll: hits per second for ウ/エ cards. ring: sound keeps ringing (metal etc.)
 const INSTRUMENTS = [
-  { id: 'bongo',      group: 'skin',  name: 'ボンゴ',          rms: -16.5, roll: 11 },
+  { id: 'bongo',      group: 'skin',  name: 'ボンゴ',          rms: -17.3, roll: 11 },
   { id: 'tambourine', group: 'skin',  name: 'タンブリン',      rms: -17.9, roll: 10 },
   { id: 'conga',      group: 'skin',  name: 'コンガ',          rms: -14.5, roll: 10 },
-  { id: 'framedrum',  group: 'skin',  name: 'フレームドラム',  rms: -20.1, roll: 10 },
+  { id: 'framedrum',  group: 'skin',  name: 'フレームドラム',  rms: -12.1, roll: 10 },
   { id: 'snare',      group: 'skin',  name: '<ruby>小<rt>こ</rt></ruby>だいこ', rms: -18.8, roll: 14 },
   { id: 'triangle',   group: 'metal', name: 'トライアングル',  rms: -18.8, roll: 12, ring: true },
   { id: 'suzu',       group: 'metal', name: 'すず',            rms: -16.9, roll: 8,  ring: true },
   { id: 'cymbal',     group: 'metal', name: 'シンバル',        rms: -22.8, roll: 10, ring: true },
-  { id: 'tonechime',  group: 'metal', name: 'トーンチャイム',  rms: -12.2, roll: 6,  ring: true },
+  { id: 'tonechime',  group: 'metal', name: 'トーンチャイム',  rms: -10.8, roll: 6,  ring: true },
   { id: 'glock',      group: 'metal', name: '<ruby>鉄琴<rt>てっきん</rt></ruby>', rms: -14.2, roll: 10, ring: true },
-  { id: 'castanet',   group: 'wood',  name: 'カスタネット',    rms: -19.6, roll: 10 },
+  { id: 'castanet',   group: 'wood',  name: 'カスタネット',    rms: -23.5, roll: 10 },
   { id: 'claves',     group: 'wood',  name: 'クラベス',        rms: -26.9, roll: 9 },
-  { id: 'woodblock',  group: 'wood',  name: 'ウッドブロック',  rms: -15.4, roll: 10 },
+  { id: 'woodblock',  group: 'wood',  name: 'ウッドブロック',  rms: -19.6, roll: 10 },
   { id: 'maracas',    group: 'wood',  name: 'マラカス',        rms: -27.0, roll: 9 },
   { id: 'guiro',      group: 'wood',  name: 'ギロ',            rms: -18.7, roll: 4 },
   { id: 'xylophone',  group: 'wood',  name: '<ruby>木琴<rt>もっきん</rt></ruby>', rms: -12.8, roll: 10 },
 ];
+function iconSVG(id, size = 56) {
+  return `<img class="icon" src="icons/${id}.svg" width="${size}" height="${size}" alt="" draggable="false">`;
+}
 const INST = Object.fromEntries(INSTRUMENTS.map(i => [i.id, i]));
 INSTRUMENTS.forEach(i => { i.gain = Math.pow(10, Math.min(0, -19 - i.rms) * 0.8 / 20); });
 
