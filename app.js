@@ -28,7 +28,7 @@ const INSTRUMENTS = [
   { id: 'claves',     group: 'wood',  name: 'クラベス',        rms: -26.9, roll: 9 },
   { id: 'woodblock',  group: 'wood',  name: 'ウッドブロック',  rms: -19.6, roll: 10 },
   { id: 'maracas',    group: 'wood',  name: 'マラカス',        rms: -27.0, roll: 9 },
-  { id: 'guiro',      group: 'wood',  name: 'ギロ',            rms: -18.7, roll: 4 },
+  { id: 'guiro',      group: 'wood',  name: 'ギロ',            rms: -14.5, roll: 3.5, rollSample: 'guiro_roll' },
   { id: 'xylophone',  group: 'wood',  name: '<ruby>木琴<rt>もっきん</rt></ruby>', rms: -12.8, roll: 10 },
 ];
 function iconSVG(id, size = 56) {
@@ -99,11 +99,12 @@ comp.threshold.value = -14; comp.ratio.value = 4; comp.attack.value = 0.003; com
 master.connect(comp).connect(ctx.destination);
 
 const buffers = {};
-INSTRUMENTS.forEach(inst => {
-  fetch(`sounds/${inst.id}.mp3`)
+const SAMPLE_FILES = INSTRUMENTS.map(i => i.id).concat(INSTRUMENTS.filter(i => i.rollSample).map(i => i.rollSample));
+SAMPLE_FILES.forEach(file => {
+  fetch(`sounds/${file}.mp3`)
     .then(r => r.arrayBuffer())
     .then(b => new Promise((ok, ng) => ctx.decodeAudioData(b, ok, ng)))
-    .then(buf => { buffers[inst.id] = buf; })
+    .then(buf => { buffers[file] = buf; })
     .catch(() => {});
 });
 
@@ -112,8 +113,8 @@ document.addEventListener('pointerdown', unlockAudio, true);
 
 let liveSources = [];
 
-function hit(dest, id, time, vel) {
-  const buf = buffers[id];
+function hit(dest, id, time, vel, sample = id) {
+  const buf = buffers[sample];
   if (!buf) return;
   const src = ctx.createBufferSource();
   src.buffer = buf;
@@ -142,7 +143,7 @@ function scheduleCard(dest, instId, cardId, t0, beat) {
   const per = inst.ring ? 0.45 : 0.75;
   for (let k = 0; k < n; k++) {
     const jitter = (Math.random() - 0.5) * step * 0.12;
-    hit(bus, instId, t0 + k * step + (k ? jitter : 0), per * (0.9 + Math.random() * 0.2));
+    hit(bus, instId, t0 + k * step + (k ? jitter : 0), per * (0.9 + Math.random() * 0.2), inst.rollSample || instId);
   }
   if (card.kind === 'cresc') {
     bus.gain.setValueAtTime(0.05, t0);
