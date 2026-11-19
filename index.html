@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>だがっきの おんがく</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="stage">
+  <div id="app">
+    <header>
+      <div class="title">
+        <span class="title-badge">♪</span>
+        <div>
+          <div class="title-main"><ruby>打楽器<rt>だがっき</rt></ruby>の<ruby>音楽<rt>おんがく</rt></ruby></div>
+        </div>
+      </div>
+      <nav class="tabs">
+        <button class="tab active" data-screen="compose">🎼 つくろう</button>
+        <button class="tab" data-screen="explore">🔍 しらべよう</button>
+      </nav>
+      <div class="head-actions">
+        <button id="btnExample" class="btn-soft">📖 おてほん</button>
+        <button id="btnClear" class="btn-soft">🗑 ぜんぶ けす</button>
+      </div>
+    </header>
+
+    <!-- ========== COMPOSE ========== -->
+    <section id="compose" class="screen active">
+      <div id="score">
+        <div id="playhead"></div>
+      </div>
+
+      <div id="controls">
+        <button id="btnPlay" class="btn-play">▶ えんそう</button>
+        <button id="btnStop" class="btn-stop" disabled>■ とめる</button>
+        <div class="tempo">
+          <span class="lbl">はやさ</span>
+          <div class="seg" id="tempoSeg">
+            <button data-bpm="72">🐢 ゆっくり</button>
+            <button data-bpm="92" class="on">🚶 ふつう</button>
+            <button data-bpm="116">🐇 はやい</button>
+          </div>
+        </div>
+        <div class="check" id="check">
+          <span class="lbl"><ruby>中<rt>なか</rt></ruby>で ぜんぶ つかったかな？</span>
+          <span class="chip" data-card="a">ア</span>
+          <span class="chip" data-card="i">イ</span>
+          <span class="chip" data-card="u">ウ</span>
+          <span class="chip" data-card="e">エ</span>
+          <span class="done">できた！</span>
+        </div>
+      </div>
+
+      <div id="tray">
+        <div class="tray-hint">カードを <b>ドラッグ</b> して ならべよう<br><span>タップすると 音が きけるよ</span></div>
+        <div id="trayCards"></div>
+        <div id="trash"><span class="trash-ico">🗑</span><span>ここに すてる</span></div>
+      </div>
+    </section>
+
+    <!-- ========== EXPLORE ========== -->
+    <section id="explore" class="screen">
+      <div id="palette"></div>
+      <div id="chartWrap">
+        <div class="chart-hint">がっきを タップして 音を きこう。<b>音の とくちょう</b>を かんがえて、<ruby>表<rt>ひょう</rt></ruby>に おいてみよう！</div>
+        <div id="chart">
+          <div class="axis-v"></div>
+          <div class="axis-h"></div>
+          <div class="ax ax-top">かたい</div>
+          <div class="ax ax-bottom">やわらかい</div>
+          <div class="ax ax-left">みじかい</div>
+          <div class="ax ax-right">ながい</div>
+          <div class="ax-title ax-title-v">[ <ruby>音色<rt>ねいろ</rt></ruby>の とくちょう ]</div>
+          <div class="ax-title ax-title-h">[ ひびきの ながさ ]</div>
+        </div>
+        <button id="btnChartReset" class="btn-soft small">↺ もとに もどす</button>
+      </div>
+    </section>
+
+    <!-- instrument picker -->
+    <div id="picker" class="modal hidden">
+      <div class="modal-box">
+        <div class="modal-head">
+          <span id="pickerTitle">がっきを えらぼう</span>
+          <button class="modal-x" id="pickerClose">✕</button>
+        </div>
+        <div id="pickerBody"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="icons.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
