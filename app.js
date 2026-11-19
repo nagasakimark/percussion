@@ -46,17 +46,17 @@ const CARDS = {
 };
 const CARD_ORDER = ['a', 'i', 'u', 'e'];
 
-const COLS = 10;                 // 0 = はじめ, 1..8 = なか, 9 = おわり
-const MID = [1, 8];
+const COLS = 12;                 // 0 = はじめ, 1..10 = なか, 11 = おわり
+const MID = [1, 10];
 const isTutti = c => c === 0 || c === COLS - 1;   // all 3 play together
 const ROW_COLORS = ['#e8504f', '#2f9e6b', '#2f7ec4'];
 
 const EXAMPLE = {
   inst: ['woodblock', 'castanet', 'claves'],
   grid: [
-    ['a', 'a', null, null, 'u', null, null, null, 'i', 'u'],
-    ['a', null, 'a', null, null, 'e', null, 'i', 'i', 'u'],
-    ['a', null, null, 'a', null, null, 'i', 'i', 'i', 'u'],
+    ['a', 'a', null, null, 'u', null, null, null, null, null, 'i', 'u'],
+    ['a', null, 'a', null, null, 'e', null, null, null, 'i', 'i', 'u'],
+    ['a', null, null, 'a', null, null, 'u', 'e', 'i', 'i', 'i', 'u'],
   ],
 };
 
@@ -73,7 +73,15 @@ let state = {
 };
 try {
   const saved = JSON.parse(localStorage.getItem(STORE_KEY) || 'null');
-  if (saved && saved.grid && saved.inst) Object.assign(state, saved);
+  if (saved && saved.grid && saved.inst) {
+    // older saves had a shorter middle section: keep start/middle/end in place
+    saved.grid = saved.grid.map(row => {
+      if (row.length === COLS) return row;
+      const mid = row.slice(1, -1).concat(Array(COLS).fill(null)).slice(0, COLS - 2);
+      return [row[0], ...mid, row[row.length - 1]];
+    });
+    Object.assign(state, saved);
+  }
 } catch (e) { /* storage blocked – fine */ }
 function save() {
   try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {}
@@ -254,8 +262,9 @@ function cardSVG(id, w = 100, h = 60) {
 /* =========================================================
    SCORE (grid) – built once, refreshed on change
    ========================================================= */
-// css grid columns: 1 inst | 2 はじめ | 3 gap | 4..11 なか | 12 gap | 13 おわり
-const gridCol = c => c === 0 ? 2 : (c === COLS - 1 ? 13 : 3 + c);
+// css grid columns: 1 inst | 2 はじめ | 3 gap | 4..13 なか | 14 gap | 15 おわり
+const END_COL = COLS + 3;
+const gridCol = c => c === 0 ? 2 : (c === COLS - 1 ? END_COL : 3 + c);
 
 function buildScore() {
   const score = $('#score');
@@ -269,11 +278,11 @@ function buildScore() {
     score.appendChild(d);
   };
   head('h-start', '<ruby>始<rt>はじ</rt></ruby>め', '3人いっしょに', 2, 3, 0, 0);
-  head('h-mid', '<ruby>中<rt>なか</rt></ruby>', 'ア・イ・ウ・エ を ぜんぶ つかって じゆうに ならべよう', 4, 12, MID[0], MID[1]);
-  head('h-end', '<ruby>終<rt>お</rt></ruby>わり', '3人いっしょに', 13, 14, COLS - 1, COLS - 1);
+  head('h-mid', '<ruby>中<rt>なか</rt></ruby>', 'ア・イ・ウ・エ を ぜんぶ つかって じゆうに ならべよう', 4, END_COL - 1, MID[0], MID[1]);
+  head('h-end', '<ruby>終<rt>お</rt></ruby>わり', '3人いっしょに', END_COL, END_COL + 1, COLS - 1, COLS - 1);
 
   // background panels
-  [['p-start', 2, 3], ['p-mid', 4, 12], ['p-end', 13, 14]].forEach(([cls, a, b]) => {
+  [['p-start', 2, 3], ['p-mid', 4, END_COL - 1], ['p-end', END_COL, END_COL + 1]].forEach(([cls, a, b]) => {
     const p = document.createElement('div');
     p.className = 'panel ' + cls;
     p.style.gridColumn = `${a} / ${b}`;
@@ -317,7 +326,7 @@ function refresh() {
   for (let r = 0; r < 3; r++) {
     const inst = INST[state.inst[r]];
     const box = $$('.inst')[r];
-    box.querySelector('.ico').innerHTML = iconSVG(inst.id, 44);
+    box.querySelector('.ico').innerHTML = iconSVG(inst.id, 38);
     box.querySelector('.nm').innerHTML = inst.name;
     const m = box.querySelector('.mute');
     m.textContent = state.mute[r] ? '🔇' : '🔊';
@@ -334,7 +343,7 @@ function refresh() {
       const pc = document.createElement('div');
       pc.className = 'pcard';
       pc.dataset.card = id;
-      pc.innerHTML = cardSVG(id, 96, 58);
+      pc.innerHTML = cardSVG(id, 84, 52);
       cell.appendChild(pc);
       makeDraggable(pc, {
         ghost: () => cardSVG(id, 104, 62),
@@ -681,6 +690,8 @@ function setupControls() {
     state.grid = [0, 1, 2].map(() => Array(COLS).fill(null));
     save(); refresh();
   });
+  $('#btnQR').addEventListener('click', () => $('#qr').classList.remove('hidden'));
+  $('#qr').addEventListener('pointerdown', () => $('#qr').classList.add('hidden'));
   $('#btnChartReset').addEventListener('click', () => { state.chart = {}; save(); renderChart(); });
   document.addEventListener('keydown', e => {
     if (e.code === 'Space' && !e.repeat && document.body.dataset.screen !== 'explore') {

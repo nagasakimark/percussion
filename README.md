@@ -15,3 +15,6 @@ All samples were trimmed, converted to mono MP3 and level-matched for this app.
   Used as-is for most instruments. The castanets and glockenspiel are recoloured versions,
   and the frame drum is the tambourine icon with the jingles removed.
 - The tone chime and guiro icons were drawn for this app in the same style.
+
+## QR code
+`qr.svg` points to https://nagasakimark.github.io/percussion/ (generated with the Python `qrcode` library).

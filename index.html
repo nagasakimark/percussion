@@ -21,6 +21,7 @@
         <button class="tab" data-screen="explore">🔍 しらべよう</button>
       </nav>
       <div class="head-actions">
+        <button id="btnQR" class="btn-soft" title="QRコード">▦ QR</button>
         <button id="btnExample" class="btn-soft">📖 おてほん</button>
         <button id="btnClear" class="btn-soft">🗑 ぜんぶ けす</button>
       </div>
@@ -78,6 +79,16 @@
         <button id="btnChartReset" class="btn-soft small">↺ もとに もどす</button>
       </div>
     </section>
+
+    <!-- QR code for this page -->
+    <div id="qr" class="modal hidden">
+      <div class="qr-box">
+        <div class="qr-title">📱 この アプリを ひらこう</div>
+        <img src="qr.svg" alt="QR">
+        <div class="qr-url">nagasakimark.github.io/percussion</div>
+        <div class="qr-close">タップで とじる</div>
+      </div>
+    </div>
 
     <!-- instrument picker -->
     <div id="picker" class="modal hidden">
